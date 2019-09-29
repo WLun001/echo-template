@@ -3,7 +3,7 @@ package repository
 import "go.mongodb.org/mongo-driver/mongo"
 
 type Repository interface {
-
+	PingDatabase() (string, error)
 }
 
 type repository struct {

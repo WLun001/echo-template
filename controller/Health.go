@@ -10,8 +10,16 @@ import (
 )
 
 func (ctrl Controller) HelloWorld(c echo.Context) error {
+	var pingDatabase string
+	success, err := ctrl.repository.PingDatabase()
+	if err != nil {
+		pingDatabase = err.Error()
+	} else {
+		pingDatabase = success
+	}
+
 	return c.JSON(http.StatusOK, model.Response{
-		Message: fmt.Sprintf("Hello World at %s", time.Now().Format(time.Stamp)),
+		Message: fmt.Sprintf("Hello World at %s, database:%s", time.Now().Format(time.Stamp), pingDatabase),
 	})
 }
 
