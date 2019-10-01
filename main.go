@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"os"
 	"time"
 )
@@ -26,15 +27,15 @@ func main() {
 	}
 
 	repo := repository.New(os.Getenv("DATABASE_NAME"), mongoClient)
-	hosts := make(map[string]*echo.Echo)
+	//hosts := make(map[string]*echo.Echo)
 	apiHost := routes.APIRoutes(repo, mongoClient)
-	hosts["localhost:8080"] = apiHost
+	//hosts["localhost:8080"] = apiHost
 
 	e := echo.New()
 	e.Any("/*", func(c echo.Context) (err error) {
 		req := c.Request()
 		res := c.Response()
-		host := hosts[req.Host]
+		host := apiHost
 
 		if host == nil {
 			err = echo.ErrNotFound
@@ -44,5 +45,12 @@ func main() {
 		host.ServeHTTP(res, req)
 		return
 	})
-	e.Logger.Fatal(e.Start(":8080"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("Defaulting to port %s", port)
+	}
+
+	log.Printf("Listening on port %s", port)
+	e.Logger.Fatal(e.Start(":" + port))
 }
