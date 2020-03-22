@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	//isProduction = strings.Contains(strings.ToLower(os.Getenv("TAIZI_APP_ENV")), "prod")
+	//isProduction = strings.Contains(strings.ToLower(os.Getenv("APP_ENV")), "prod")
 
 	// DefaultDB :
 	DefaultDB = os.Getenv("DATABASE_NAME")
